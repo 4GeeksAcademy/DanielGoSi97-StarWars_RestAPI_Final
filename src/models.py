@@ -5,8 +5,10 @@ from typing import List
 
 db = SQLAlchemy()
 
+
 class User(db.Model):
     __tablename__ = "user"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(80), nullable=False)
@@ -22,11 +24,13 @@ class User(db.Model):
             "email": self.email
         }
 
+
 class Favorites_Personaje(db.Model):
     __tablename__ = "favorites_personaje"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)  
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     personaje_id: Mapped[int] = mapped_column(ForeignKey("personaje.id"), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="favorites_personaje")
@@ -39,11 +43,13 @@ class Favorites_Personaje(db.Model):
             "personaje_id": self.personaje_id
         }
 
+
 class Favorites_Planeta(db.Model):
     __tablename__ = "favorites_planeta"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)  
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     planeta_id: Mapped[int] = mapped_column(ForeignKey("planeta.id"), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="favorites_planeta")
@@ -56,11 +62,13 @@ class Favorites_Planeta(db.Model):
             "planeta": self.planeta_id
         }
 
+
 class Favorites_Nave(db.Model):
     __tablename__ = "favorites_nave"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)  
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     nave_id: Mapped[int] = mapped_column(ForeignKey("nave.id"), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="favorites_nave")
@@ -76,9 +84,10 @@ class Favorites_Nave(db.Model):
 
 class Personaje(db.Model):
     __tablename__ = "personaje"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
-    
+
     id_planeta: Mapped[int] = mapped_column(ForeignKey("planeta.id"), nullable=False)
     id_nave: Mapped[int] = mapped_column(ForeignKey("nave.id"), nullable=False)
 
@@ -88,12 +97,14 @@ class Personaje(db.Model):
 
     def serialize(self):
         return {
-                "id": self.id, 
-                "nombre": self.nombre
-                }
+            "id": self.id,
+            "nombre": self.nombre
+        }
+
 
 class Planeta(db.Model):
     __tablename__ = "planeta"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
     clima: Mapped[str] = mapped_column(String(120), nullable=False)
@@ -103,13 +114,15 @@ class Planeta(db.Model):
 
     def serialize(self):
         return {
-                "id": self.id, 
-                "nombre": self.nombre, 
-                "clima": self.clima
-                }
+            "id": self.id,
+            "nombre": self.nombre,
+            "clima": self.clima
+        }
+
 
 class Nave(db.Model):
     __tablename__ = "nave"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
     modelo: Mapped[str] = mapped_column(String(120), nullable=False)
@@ -119,7 +132,7 @@ class Nave(db.Model):
 
     def serialize(self):
         return {
-                "id": self.id, 
-                "nombre": self.nombre, 
-                "modelo": self.modelo
-                }
+            "id": self.id,
+            "nombre": self.nombre,
+            "modelo": self.modelo
+        }
