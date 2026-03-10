@@ -3,6 +3,15 @@ from flask_admin import Admin
 from models import db, User, Personaje, Planeta, Nave, Favorites_Personaje, Favorites_Planeta, Favorites_Nave
 from flask_admin.contrib.sqla import ModelView
 
+class vistaFavoritesCharacter(ModelView):
+    column_list=("id","user_id", "personaje_id")
+
+class vistaFavoritesPlanets(ModelView):
+    column_list=("id","user_id", "planeta")
+
+class vistaFavoritesStarships(ModelView):
+    column_list=("id","user_id", "nave")
+
 def setup_admin(app):
     app.secret_key = os.environ.get('FLASK_APP_KEY', 'sample key')
     app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
@@ -16,9 +25,9 @@ def setup_admin(app):
     admin.add_view(ModelView(Planeta, db.session))
     admin.add_view(ModelView(Nave, db.session))
 
-    admin.add_view(ModelView(Favorites_Personaje, db.session))
-    admin.add_view(ModelView(Favorites_Planeta, db.session))
-    admin.add_view(ModelView(Favorites_Nave, db.session))
+    admin.add_view(vistaFavoritesCharacter(Favorites_Personaje, db.session))
+    admin.add_view(vistaFavoritesPlanets(Favorites_Planeta, db.session))
+    admin.add_view(vistaFavoritesStarships(Favorites_Nave, db.session))
 
     # You can duplicate that line to add mew models
     # admin.add_view(ModelView(YourModelName, db.session))

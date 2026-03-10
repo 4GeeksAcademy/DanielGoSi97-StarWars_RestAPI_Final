@@ -118,6 +118,52 @@ def add_favorite_planet(planet_id):
 
     return jsonify({"msg": "Planet added to favorites"}), 201
 
+#Reemplazo de admin por endpoints
+
+@app.route('/people', methods=['POST'])
+def create_person():
+    body = request.get_json()
+    if body is None:
+        return jsonify({"msg": "Cuerpo no puede estar vacio"}), 400
+    if "nombre" not in body:
+        return jsonify({"msg": "Nombre es obligatorios"}), 400
+
+    new_person = Personaje(
+        nombre=body['nombre'],
+        id_planeta=body.get('id_planeta'),
+        id_nave=body.get('id_nave') 
+    )
+    db.session.add(new_person)
+    db.session.commit()
+    return jsonify({"msg": "Personaje creado", "result": new_person.serialize()}), 201
+
+@app.route('/planets', methods=['POST'])
+def create_planet():
+    body = request.get_json()
+    if body is None or "nombre" not in body or "clima" not in body:
+        return jsonify({"msg": "Nombre y clima son obligatorios"}), 400
+
+    new_planet = Planeta(
+        nombre=body['nombre'],
+        clima=body['clima']
+    )
+    db.session.add(new_planet)
+    db.session.commit()
+    return jsonify({"msg": "Planeta creado", "result": new_planet.serialize()}), 201
+
+@app.route('/starships', methods=['POST'])
+def create_starship():
+    body = request.get_json()
+    if body is None or "nombre" not in body or "modelo" not in body:
+        return jsonify({"msg": "Nombre y modelo son obligatorios"}), 400
+
+    new_ship = Nave(
+        nombre=body['nombre'],
+        modelo=body['modelo']
+    )
+    db.session.add(new_ship)
+    db.session.commit()
+    return jsonify({"msg": "Nave creada", "result": new_ship.serialize()}), 201
 
 @app.route('/favorite/people/<int:people_id>', methods=['POST'])
 def add_favorite_people(people_id):
@@ -133,6 +179,8 @@ def add_favorite_people(people_id):
     db.session.commit()
 
     return jsonify({"msg": "People added to favorites"}), 201
+
+    #crear planeta crear personaje crear nave
 
 @app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
 def delete_favorite_planet(planet_id):
