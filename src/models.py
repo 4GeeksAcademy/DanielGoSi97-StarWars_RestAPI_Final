@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import List
+from typing import List, Optional
 
 db = SQLAlchemy()
 
@@ -12,7 +12,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(80), nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean(), default=True)
 
     favorites_personaje: Mapped[List["Favorites_Personaje"]] = relationship(back_populates="user")
     favorites_planeta: Mapped[List["Favorites_Planeta"]] = relationship(back_populates="user")
@@ -88,8 +88,8 @@ class Personaje(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
 
-    id_planeta: Mapped[int] = mapped_column(ForeignKey("planeta.id"), nullable=False)
-    id_nave: Mapped[int] = mapped_column(ForeignKey("nave.id"), nullable=False)
+    id_planeta: Mapped[Optional[int]] = mapped_column(ForeignKey("planeta.id"), nullable=True)
+    id_nave: Mapped[Optional[int]] = mapped_column(ForeignKey("nave.id"), nullable=True)
 
     planeta: Mapped["Planeta"] = relationship(back_populates="residentes")
     nave: Mapped["Nave"] = relationship(back_populates="pilotos")
@@ -98,7 +98,9 @@ class Personaje(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "nombre": self.nombre
+            "nombre": self.nombre,
+            "id_planeta": self.id_planeta,
+            "id_nave": self.id_nave
         }
 
 

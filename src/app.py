@@ -93,17 +93,19 @@ def get_favorites():
 
     fav_people = Favorites_Personaje.query.filter_by(user_id=user_id).all()
     fav_planets = Favorites_Planeta.query.filter_by(user_id=user_id).all()
+    fav_ships = Favorites_Nave.query.filter_by(user_id=user_id).all() # <-- Faltaba esta
 
     response = {
         "favorite_people": [fav.serialize() for fav in fav_people],
-        "favorite_planets": [fav.serialize() for fav in fav_planets]
+        "favorite_planets": [fav.serialize() for fav in fav_planets],
+        "favorite_starships": [fav.serialize() for fav in fav_ships]
     }
 
     return jsonify(response), 200
 
 @app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
 def add_favorite_planet(planet_id):
-
+    # Hacemos test ya que no hay definición de usuario en el ejercicio
     user_id = 1
 
     new_favorite = Favorites_Planeta(
@@ -119,12 +121,12 @@ def add_favorite_planet(planet_id):
 
 @app.route('/favorite/people/<int:people_id>', methods=['POST'])
 def add_favorite_people(people_id):
-
+    # Hacemos test ya que no hay definición de usuario en el ejercicio
     user_id = 1
 
     new_favorite = Favorites_Personaje(
-        user_id=user_id,
-        personaje_id=people_id
+        user_id = user_id,
+        personaje_id = people_id
     )
 
     db.session.add(new_favorite)
@@ -134,7 +136,7 @@ def add_favorite_people(people_id):
 
 @app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
 def delete_favorite_planet(planet_id):
-
+    # Hacemos test ya que no hay definición de usuario en el ejercicio
     user_id = 1
 
     favorite = Favorites_Planeta.query.filter_by(
@@ -152,7 +154,7 @@ def delete_favorite_planet(planet_id):
 
 @app.route('/favorite/people/<int:people_id>', methods=['DELETE'])
 def delete_favorite_people(people_id):
-
+    # Hacemos test ya que no hay definición de usuario en el ejercicio
     user_id = 1
 
     favorite = Favorites_Personaje.query.filter_by(
@@ -166,6 +168,33 @@ def delete_favorite_people(people_id):
     db.session.delete(favorite)
     db.session.commit()
 
+    return jsonify({"msg": "Favorite deleted"}), 200
+
+@app.route('/planets', methods=['GET'])
+def get_planets():
+    planets = Planeta.query.all()
+    return jsonify(list(map(lambda planet: planet.serialize(), planets))), 200
+
+@app.route('/starships', methods=['GET'])
+def get_starships():
+    ships = Nave.query.all()
+    return jsonify(list(map(lambda nave: nave.serialize(), ships))), 200
+
+@app.route('/favorite/starship/<int:starship_id>', methods=['POST'])
+def add_favorite_starship(starship_id):
+    user_id = 1
+    new_favorite = Favorites_Nave(user_id=user_id, nave_id=starship_id)
+    db.session.add(new_favorite)
+    db.session.commit()
+    return jsonify({"msg": "Starship added to favorites"}), 201
+
+def delete_favorite_starship(starship_id):
+    user_id = 1
+    favorite = Favorites_Nave.query.filter_by(user_id=user_id, nave_id=starship_id).first()
+    if not favorite:
+        return jsonify({"msg": "Favorite not found"}), 404
+    db.session.delete(favorite)
+    db.session.commit()
     return jsonify({"msg": "Favorite deleted"}), 200
 
 # this only runs if `$ python src/app.py` is executed
