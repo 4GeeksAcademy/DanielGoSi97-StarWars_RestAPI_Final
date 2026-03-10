@@ -236,6 +236,7 @@ def add_favorite_starship(starship_id):
     db.session.commit()
     return jsonify({"msg": "Starship added to favorites"}), 201
 
+@app.route('/favorite/starship/<int:starship_id>', methods=['DELETE'])
 def delete_favorite_starship(starship_id):
     user_id = 1
     favorite = Favorites_Nave.query.filter_by(user_id=user_id, nave_id=starship_id).first()

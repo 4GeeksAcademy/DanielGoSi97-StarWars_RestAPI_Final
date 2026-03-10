@@ -95,6 +95,9 @@ class Personaje(db.Model):
     nave: Mapped["Nave"] = relationship(back_populates="pilotos")
     favorited: Mapped[List["Favorites_Personaje"]] = relationship(back_populates="personaje")
 
+    def __repr__(self):
+        return f'{self.nombre}'
+
     def serialize(self):
         return {
             "id": self.id,
@@ -114,6 +117,9 @@ class Planeta(db.Model):
     residentes: Mapped[List["Personaje"]] = relationship(back_populates="planeta")
     favorited: Mapped[List["Favorites_Planeta"]] = relationship(back_populates="planeta")
 
+    def __repr__(self):
+        return f'{self.nombre}'
+
     def serialize(self):
         return {
             "id": self.id,
@@ -131,6 +137,9 @@ class Nave(db.Model):
 
     pilotos: Mapped[List["Personaje"]] = relationship(back_populates="nave")
     favorited: Mapped[List["Favorites_Nave"]] = relationship(back_populates="nave")
+
+    def __repr__(self):
+        return f'{self.nombre}'
 
     def serialize(self):
         return {
