@@ -1,0 +1,13 @@
+certifi==2026.2.25
+distlib==0.4.0
+filelock==3.28.0
+gitdb==4.0.12
+GitPython==3.1.41
+gunicorn==25.3.0
+packaging==26.1
+pipenv==2026.5.2
+platformdirs==4.9.6
+python-discovery==1.2.2
+setuptools==78.1.1
+smmap==5.0.3
+virtualenv==21.2.4
