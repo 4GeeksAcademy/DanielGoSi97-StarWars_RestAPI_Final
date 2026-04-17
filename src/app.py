@@ -23,6 +23,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 MIGRATE = Migrate(app, db)
 db.init_app(app)
+with app.app_context():
+    db.create_all()
+    print("Tablas creadas exitosamente.")
 CORS(app)
 setup_admin(app)
 
