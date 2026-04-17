@@ -1,31 +1,31 @@
-"""
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
-"""
 import os
-from flask import Flask, request, jsonify, url_for
+import sys
+from flask import Flask, request, jsonify
 from flask_migrate import Migrate
-from flask_swagger import swagger
 from flask_cors import CORS
+
+# Forzamos la ruta interna para Render
+sys.path.append(os.path.dirname(__file__))
+
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User, Personaje, Planeta, Nave, Favorites_Personaje, Favorites_Planeta, Favorites_Nave
-#from models import Person
 
 app = Flask(__name__)
-app.url_map.strict_slashes = False
 
+# Configuración de DB para Render (Cambia postgres:// por postgresql://)
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace("postgres://", "postgresql://")
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-MIGRATE = Migrate(app, db)
 db.init_app(app)
+
+# CREAR TABLAS (Si no haces esto, la app falla al no encontrar tablas)
 with app.app_context():
     db.create_all()
-    print("Tablas creadas exitosamente.")
+
 CORS(app)
 setup_admin(app)
 
